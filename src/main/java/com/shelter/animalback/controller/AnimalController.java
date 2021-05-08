@@ -52,7 +52,8 @@ public class AnimalController {
     @PostMapping("/animals")
     public ResponseEntity<?> saveAnimal(@RequestBody CreateAnimalBodyDto animalDto) {
         try {
-            var animal = animalService.save(map(animalDto));
+            var animal = map(animalDto);
+            animal = animalService.save(animal);
             return new ResponseEntity<AnimalDto>(map(animal), HttpStatus.CREATED);
 
         } catch (Exception ex) {
@@ -88,7 +89,8 @@ public class AnimalController {
                 dto.getBreed(),
                 dto.getGender(),
                 dto.isVaccinated(),
-                dto.getVaccines());
+                dto.getVaccines() == null ? new String[0] : dto.getVaccines());
+
     }
 
     private Animal map(UpdateAnimalBodyDto dto) {

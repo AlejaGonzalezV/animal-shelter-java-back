@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AnimalRepository extends CrudRepository<AnimalDao, Long> {
     AnimalDao findByName(String name);
+    boolean deleteAnimal(AnimalDao animal);
 }

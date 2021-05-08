@@ -7,6 +7,7 @@ import au.com.dius.pact.provider.junitsupport.State;
 import au.com.dius.pact.provider.junitsupport.loader.PactBroker;
 import au.com.dius.pact.provider.junitsupport.loader.PactBrokerAuth;
 import au.com.dius.pact.provider.spring.junit5.MockMvcTestTarget;
+import com.shelter.animalback.contract.api.matcher.AnimalMatcher;
 import com.shelter.animalback.controller.AnimalController;
 import com.shelter.animalback.domain.Animal;
 import com.shelter.animalback.service.interfaces.AnimalService;
@@ -18,12 +19,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
-
 @PactBroker(authentication = @PactBrokerAuth(token = "${PACT_BROKER_TOKEN}"), url = "${PACT_BROKER_URL}")
 @Provider("AnimalShelterBack")
 @ExtendWith(MockitoExtension.class)
-public class ListAnimalTest {
+public class CreateAnimalTest {
 
     @Mock
     private AnimalService animalService;
@@ -46,20 +45,23 @@ public class ListAnimalTest {
         context.setTarget(testTarget);
     }
 
-    @State("there are animals")
-    public void verifyListAnimals(){
+
+
+    @State("create animal")
+    public void verifyCreateAnimals(){
 
         Animal animal = new Animal();
-        animal.setName("Paco");
-        animal.setBreed("Golden");
+        animal.setName("Lulo");
+        animal.setBreed("Pug");
         animal.setGender("Male");
-        animal.setVaccinated(false);
+        animal.setVaccinated(true);
 
-        ArrayList<Animal> animals = new ArrayList<Animal>();
-        animals.add(animal);
+        //Mockito.when(animalService.save(Mockito.argThat(new AnimalMatcher(animal)))).thenReturn(animal);
+        Mockito.when(animalService.save(Mockito.any(Animal.class))).thenReturn(animal);
 
-        Mockito.when(animalService.getAll()).thenReturn(animals);
 
     }
+
+
 
 }
