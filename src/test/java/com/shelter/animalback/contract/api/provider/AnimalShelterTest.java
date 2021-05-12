@@ -20,10 +20,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 @PactBroker(authentication = @PactBrokerAuth(token = "${PACT_BROKER_TOKEN}"), url = "${PACT_BROKER_URL}")
 @Provider("AnimalShelterBack")
 @ExtendWith(MockitoExtension.class)
-public class ListAnimalTest {
+public class AnimalShelterTest {
 
     @Mock
     private AnimalService animalService;
@@ -46,6 +48,7 @@ public class ListAnimalTest {
         context.setTarget(testTarget);
     }
 
+
     @State("there are animals")
     public void verifyListAnimals(){
 
@@ -59,6 +62,31 @@ public class ListAnimalTest {
         animals.add(animal);
 
         Mockito.when(animalService.getAll()).thenReturn(animals);
+
+    }
+
+    @State("create animal")
+    public void verifyCreateAnimals(){
+
+        Animal animal = new Animal();
+        animal.setName("Lulo");
+        animal.setBreed("Pug");
+        animal.setGender("Male");
+        animal.setVaccinated(true);
+
+        //Mockito.when(animalService.save(Mockito.argThat(new AnimalMatcher(animal)))).thenReturn(animal);
+        Mockito.when(animalService.save(Mockito.any(Animal.class))).thenReturn(animal);
+    }
+
+    @State("delete animal")
+    public void verifyDeleteAnimals(){
+
+        String name = "Lulo";
+        Mockito.doAnswer((i) -> {
+            assertTrue(name.equals(i.getArgument(0)));
+            return null;
+        }).when(animalService).delete(name);
+
 
     }
 
